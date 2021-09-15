@@ -74,7 +74,59 @@ int main(){
 
 
 int martinGaleStrat(int slots, int zeroes, int visits, int money){
-    cout << "Martingale Strategy" << endl;
+    cout << "Martingale Strategy has been selected." << endl;
+    int betAmt = 1;
+    int cont;
+    bool quit = true;
+    int spin = rand() % slots + 0;
+    cout << "Now betting with $1" << endl;
+    if (spin % 2 == 0){
+        cout << "You won your bet!" << endl;
+    }
+    else {
+        cout << "You lost your bet. Doubling your betting amount and trying again." << endl;
+            money = money - betAmt;
+            cout << "\nYour remaining balance: $" << money << endl;
+        do {
+                cout << "\nNow betting with $" << (betAmt * 2)  << endl;
+                spin = rand() % slots + 0;
+                    if (spin % 2 == 0){
+                        cout << "\nYou won your bet and have earned $"<< (betAmt * 4) << endl;
+                        money = money + (betAmt * 4);
+                        cout << "\nYour new balance: $" << money << endl; 
+                        cout << "|-----------------------------------------------------|" << endl;
+                        cout << "Would you like to continue? Press 1 to continue, and 2 to exit: ";
+                        while(!(cin >> cont) || cont < 1 || cont > 2){
+                            cout << "Please enter 1 or 2: ";
+                            cin.clear();
+                            cin.ignore(132, '\n');
+                        }
+                        if(cont == 1){
+                            quit = false;
+                            cout << "Continuing..." << endl;
+                            betAmt = betAmt * 2;
+                        }
+                        else if(cont == 2){
+                            quit = true; 
+                            cout << "Exiting..." << endl;
+                            return 0;
+                        }
+                    }
+                    else{
+                        betAmt = betAmt * 2;
+                        if (betAmt > money){
+                            cout << "You don't have enough money to bet again!" << endl;
+                            return 0;
+                        }
+                        else{
+                            cout << "You lost your bet. Doubling your betting amount and trying again." << endl;
+                            money = money - betAmt;
+                            cout << "Your remaining balance: $" << money << endl;
+                            quit = false;
+                        }
+                    }
+        } while (money > 0 && quit == false);
+    }
     return 0;
 }
 
