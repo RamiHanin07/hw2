@@ -23,28 +23,28 @@ int main(){
     cout << "Welcome to Casino Simulator, today we're playing Roulette." << endl;
     cout << "Please answer the following questions so we can get started: " <<endl;
     cout << "1. How many slots should there be on your roulette wheel? (2-200)" << endl;
-    cin >> slots;
-    while(slots < 2 || slots > 200){
-        cout << "That is an invalid input. Please enter an integer from 2-200" << endl;
-        cin >> slots;
-    }
+        while(!(cin >> slots) || slots < 2 || slots > 200){
+            cout << "Invalid input, please pick an integer between 2 and 200: ";
+            cin.clear();
+            cin.ignore(132, '\n');
+        }
     cout << "2. How many of the slots will be labeled with 0 or 00? (0, 1, 2)" <<endl;
-    cin >> zeroes;
-    while(zeroes < 0 || zeroes > 2){
-        cout << "That is an invalid input. Please enter an integer of 0, 1, or 2" << endl;
-        cin >> zeroes;
-    }
+        while(!(cin >> zeroes) || zeroes < 0 || zeroes > 2){
+            cout << "That is an invalid input. Please enter an integer of 0, 1, or 2" << endl;
+                cin.clear();
+                cin.ignore(132, '\n');
+        }
     cout << "3. How many times do you want to visit the casino in this simulation? (1-100,000)" << endl;
-    cin >> visits;
-    while(visits < 1 || visits > 100000){
-        cout << "That is an invalid input. Please enter an integer between 1 and 100,000 inclusive" << endl;
-        cin >> visits;
-    }
+        while(!(cin >> visits) || visits < 1 || visits > 100000){
+            cout << "That is an invalid input. Please enter an integer between 1 and 100,000 inclusive" << endl;
+                cin.clear();
+                cin.ignore(132, '\n');
+        }
     cout << "4. How many dollars do you wish to start with during each visit? (1-1,000,000)" << endl;
-    cin >> money;
-    while(money < 1 || money > 1000000){
+    while(!(cin >> money) || money < 1 || money > 1000000){
         cout << "That is an invalid input. Please enter an integer between 1 and 1,000,000 inclusive" << endl;
-        cin >> money;
+            cin.clear();
+            cin.ignore(132, '\n');
     }
     cout << "|-----------------------------------------------------|" << endl;
     cout << "Thank you for inputting all the relevant information" << endl;
@@ -52,14 +52,15 @@ int main(){
     cout << "1. Martingale Strategy" << endl;
     cout << "2. Random Strategy" << endl;
     cout << "3. Fixed Bet Strategy" << endl;
-    cin >> menu;
-    while(menu < 1 || menu > 3){
+    
+    while(!(cin >> menu) || menu < 1 || menu > 3){
         cout << "That was an invalid input." << endl;
         cout << "Please select from one of the below betting strategies to get started simulating" << endl;
         cout << "1. Martingale Strategy" << endl;
         cout << "2. Random Strategy" << endl;
         cout << "3. Fixed Bet Strategy" << endl;
-        cin >> menu;
+            cin.clear();
+            cin.ignore(132, '\n');
     }
 
     if(menu == 1){
@@ -88,6 +89,7 @@ int martinGaleStrat(int slots, int zeroes, int visits, int money){
             money = money - betAmt;
             cout << "\nYour remaining balance: $" << money << endl;
         do {
+            
                 cout << "\nNow betting with $" << (betAmt * 2)  << endl;
                 spin = rand() % slots + 0;
                     if (spin % 2 == 0){
@@ -138,3 +140,4 @@ int randomStrat(int slots, int zeroes, int visits, int money){
 int fixedStrat(int slots, int zeroes, int visits, int money){
     cout << "fixedStrat" << endl;
 }
+
