@@ -33,6 +33,7 @@ int main(){
     cout << "Welcome to Casino Simulator, today we're playing Roulette." << endl;
     cout << "Please answer the following questions so we can get started: " <<endl;
     cout << "1. How many slots should there be on your roulette wheel? (2-200)" << endl;
+        //Input validation code segment. This is used repeatedly throughout the entirety of the program
         while(!(cin >> slots) || slots < 2 || slots > 200){
             cout << "Invalid input, please pick an integer between 2 and 200: ";
             cin.clear();
@@ -112,10 +113,12 @@ int martinGaleStrat(int slots, int zeroes, int visits, int money, int &totalRisk
     int startingMoney = money;
     int increment = 0;
     do{
+        //increment counter to keep track of the total number of visits to the casino
         increment++;
         cout << "Visit " << increment << " to the casino" << endl;
         startingMoney = money;
         int spin = rand() % slots + 0;
+        //begins the martingale strategy with $1. This value is not entered by the user 
         cout << "Now betting with $1" << endl;
         if (spin % 2 == 0){
             cout << "You won your bet!" << endl;
@@ -123,12 +126,14 @@ int martinGaleStrat(int slots, int zeroes, int visits, int money, int &totalRisk
         }
         else {
             cout << "You lost your bet. Doubling your betting amount and trying again." << endl;
+                //deducts the bet amount from the account balance that the user started with 
                 startingMoney = startingMoney - betAmt;
                 cout << "\nYour remaining balance: $" << startingMoney << endl;
             do {
                     cout << "\nNow betting with $" << (betAmt * 2)  << endl;
                     spin = rand() % slots + 0;
                         if (spin % 2 == 0){
+                            //returns to the user the amount they betted + the winnings
                             cout << "\nYou won your bet and have earned $"<< (betAmt * 4) << endl;
                             startingMoney = startingMoney + (betAmt * 4);
                             cout << "\nYour new balance: $" << startingMoney << endl; 
@@ -139,12 +144,14 @@ int martinGaleStrat(int slots, int zeroes, int visits, int money, int &totalRisk
                                 cin.clear();
                                 cin.ignore(132, '\n');
                             }
+                            //Allows the user to decide if they want to continue placing bets, or quitting after winning one time
                             if(cont == 1){
                                 quit = false;
                                 cout << "Continuing..." << endl;
                                 betAmt = betAmt * 2;
                             }
                             else if(cont == 2){
+                                //boolean is assigned the value of 'true', ending the do-while loop and exiting the program 
                                 quit = true; 
                                 cout << "Exiting..." << endl;
                                 return 0;
@@ -153,6 +160,7 @@ int martinGaleStrat(int slots, int zeroes, int visits, int money, int &totalRisk
                         else{
                             betAmt = betAmt * 2;
                             if (betAmt > startingMoney){
+                                //exits the strategy when the bet amount is higher than the total amount of money the user has 
                                 cout << "You don't have enough money to bet again!" << endl;
                                 return 0;
                             }
@@ -160,6 +168,7 @@ int martinGaleStrat(int slots, int zeroes, int visits, int money, int &totalRisk
                                 cout << "You lost your bet. Doubling your betting amount and trying again." << endl;
                                 startingMoney = startingMoney - betAmt;
                                 cout << "Your remaining balance: $" << startingMoney << endl;
+                                //boolean remains false, allowing the do-while loop to repeat 
                                 quit = false;
                             }
                         }
@@ -260,7 +269,6 @@ int fixedStrat(int slots, int zeroes, int visits, int money, int &totalRisked, i
     int betNum = 0;
     int spin;
     int next;
-    bool quit = true;
     cout << "Fixed Strategy has been chosen" << endl;
     cout << "Place your bet. Enter a specific $ amount: ";
     while(!(cin >> dollarAmt) || dollarAmt < 1 || dollarAmt > money){
@@ -274,32 +282,26 @@ int fixedStrat(int slots, int zeroes, int visits, int money, int &totalRisked, i
         spin = rand() % slots + 0;
         if (spin % 2 == 0){
             cout << "\nYou won your bet and have earned $"<< (dollarAmt * 2) << endl;
+            //returns to the user the amount they bet + the winnings (which amounts to twice the amount of the bet)
             money = money + (dollarAmt * 2);
+            //displays updated account balance
             cout << "\nNew account balance: $" << money << endl;
             betNum++;
         }
         else{
                 cout << "\nYou lost your bet." << endl;
+                //subtracts the bet amount from the total account balance and displays the remaining balance
                 money = money - dollarAmt;
                 cout << "\nRemaining account balance: $" << money << endl;
                 betNum++;
         }
-        cout << "Press 1 to continue: ";
-        while(!(cin >> next) || next != 1){
-            cout << "Please enter 1 to continue: ";
-                cin.clear();
-                cin.ignore(132, '\n');
-        }
-        if(next == 1){
-            quit = false;
-            cout << "Continuing..." << endl;
-        }
         if (money < dollarAmt) {
+        //exits the strategy if the amount of money the user has is less than the fixed bet amount
         cout << "\nYou don't have enough money to continue placing bets. It's time for you to go home." << endl;
         cout << "\nYour final account balance: $" << money << endl;
         return 0;
         }
-    } while (betNum <= 50 && quit == false);
+    } while (betNum <= 50);
 
     if (betNum > 50) {
         cout << "\nYou have bet 50 times. You cannot place any more than 50 bets." << endl;
