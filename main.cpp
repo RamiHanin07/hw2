@@ -28,6 +28,7 @@ int main(){
     int winningTimes = 0;
     int losingTimes = 0;
     int evenTimes = 0;
+    srand(time(NULL));
 
     //Initial information gathering section and opening pleasantries
     cout << "Welcome to Casino Simulator, today we're playing Roulette." << endl;
@@ -177,7 +178,7 @@ int randomStrat(int slots, int zeroes, int visits, int money, int &totalRisked, 
     int spin = 0;
     bool lost = false;
     int bets = 0;
-    srand(time(NULL));
+    
     cout << "Random Strategy has been chosen" << endl;
     //Will have two do while loops
     //1. for controlling all visits to the casino, which will reset betting values 
@@ -193,7 +194,7 @@ int randomStrat(int slots, int zeroes, int visits, int money, int &totalRisked, 
             lost = false;
             bettingAmount = rand() % startingMoney + 1;
             cout << "Betting " << bettingAmount << " on black " << endl;
-            spin = rand() % slots + 1;
+            spin = rand() % slots + 0;
             //Checking conditionals to see if it landed green, black, or red
             if(zeroes == 1){
                 if(spin == 0){
@@ -259,51 +260,78 @@ int fixedStrat(int slots, int zeroes, int visits, int money, int &totalRisked, i
     int dollarAmt;
     int betNum = 0;
     int spin;
+    int increment = 0;
+    int startingMoney = money;
     int next;
-    bool quit = true;
+    bool quit = false;
+    bool lost = false;
+    srand(time(NULL));
     cout << "Fixed Strategy has been chosen" << endl;
-    cout << "Place your bet. Enter a specific $ amount: ";
-    while(!(cin >> dollarAmt) || dollarAmt < 1 || dollarAmt > money){
-        cout << "Invalid amount. Must enter a dollar value between $1 and the maximum amount of money you have brought with you to the casino, which is: $" << money << endl;
-        
-        cin.clear();
-        cin.ignore(132, '\n');
-    }
-    cout << "\nNow betting with $" << dollarAmt<< endl;
-    do {
-        spin = rand() % slots + 0;
-        if (spin % 2 == 0){
-            cout << "\nYou won your bet and have earned $"<< (dollarAmt * 2) << endl;
-            money = money + (dollarAmt * 2);
-            cout << "\nNew account balance: $" << money << endl;
-            betNum++;
+    do{
+        increment++;
+        betNum = 0;
+        quit = false;
+        cout << "Visit number " << increment << " to casino" << endl;
+        startingMoney = money;
+        cout << "Place your bet. Enter a specific $ amount: ";
+        while(!(cin >> dollarAmt) || dollarAmt < 1 || dollarAmt > startingMoney){
+            cout << "Invalid amount. Must enter a dollar value between $1 and the maximum amount of money you have brought with you to the casino, which is: $" << startingMoney << endl;
+            cin.clear();
+            cin.ignore(132, '\n');
         }
-        else{
-                cout << "\nYou lost your bet." << endl;
-                money = money - dollarAmt;
-                cout << "\nRemaining account balance: $" << money << endl;
+        cout << "\nNow betting with $" << dollarAmt<< endl;
+        do {
+            spin = rand() % slots + 0;
+            if(zeroes == 1){
+                if(spin == 0){
+                    cout << "Spin hits: GREEN " << spin << endl;
+                    startingMoney = startingMoney - dollarAmt;
+                    cout << "\nRemaining account balance: $" << startingMoney << endl;
+                    betNum++;
+                    lost = true;
+                }
+            }
+            if(zeroes == 2){
+                if(spin == 0 || spin == 100){
+                    cout << "Spin hits: GREEN " << spin << endl;
+                    startingMoney = startingMoney - dollarAmt;
+                    cout << "\nRemaining account balance: $" << startingMoney << endl;
+                    betNum++;
+                    lost = true;
+                }
+            }
+            if (spin % 2 == 0 && lost != true){
+                cout << "\nYou won your bet and have earned $"<< (dollarAmt * 2) << endl;
+                startingMoney = startingMoney + (dollarAmt * 2);
+                cout << "\nNew account balance: $" << startingMoney << endl;
                 betNum++;
-        }
-        cout << "Press 1 to continue: ";
-        while(!(cin >> next) || next != 1){
-            cout << "Please enter 1 to continue: ";
-                cin.clear();
-                cin.ignore(132, '\n');
-        }
-        if(next == 1){
-            quit = false;
-            cout << "Continuing..." << endl;
-        }
-        if (money < dollarAmt) {
-        cout << "\nYou don't have enough money to continue placing bets. It's time for you to go home." << endl;
-        cout << "\nYour final account balance: $" << money << endl;
-        return 0;
-        }
-    } while (betNum <= 50 && quit == false);
+            }
+            if(spin % 2 != 0 && lost != true){
+                cout << "\nYou lost your bet." << endl;
+                startingMoney = startingMoney - dollarAmt;
+                cout << "\nRemaining account balance: $" << startingMoney << endl;
+                betNum++;
+            }
+            // cout << "Press 1 to continue: ";
+            // while(!(cin >> next) || next != 1){
+            //     cout << "Please enter 1 to continue: ";
+            //         cin.clear();
+            //         cin.ignore(132, '\n');
+            // }
+            // if(next == 1){
+            //     quit = false;
+            //     cout << "Continuing..." << endl;
+            // }
+            if (startingMoney < dollarAmt) {
+                cout << "\nYou don't have enough money to continue placing bets. It's time for you to go home." << endl;
+                cout << "\nYour final account balance: $" << startingMoney << endl;
+                quit = true;
+            }
+        } while (betNum <= 50 && quit == false);
 
-    if (betNum > 50) {
-        cout << "\nYou have bet 50 times. You cannot place any more than 50 bets." << endl;
-        return 0; 
-    }
+        if (betNum > 50) {
+            cout << "\nYou have bet 50 times. You cannot place any more than 50 bets." << endl;
+        }
+    }while(increment < visits);
 }
 
