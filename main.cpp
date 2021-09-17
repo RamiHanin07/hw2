@@ -77,6 +77,26 @@ int main(){
 
     if(menu == 1){
         martinGaleStrat(slots,zeroes,visits,money, totalRisked, totalWinnings, biggestWin, brokeNum, averageChange, winningTimes, losingTimes, evenTimes);
+        cout << "Finished with Martingale Strategy" << endl;
+        cout << "Displaying Statistics:" << endl;
+        cout << "|-------------------------------------------|" << endl;
+        cout << "Slots Input at Start: " << slots << endl;
+        cout << "Zeroes Input at Start: " << zeroes << endl;
+        cout << "Visits Input at Start: " << visits << endl;
+        cout << "Betting Amount Input at Start: " << money << endl;
+        cout << "Total Amount Risked: " << totalRisked << endl;
+        cout << "Total Amount Won: " << totalWinnings << " , " << totalWinnings / totalRisked * 100 << "\% gain" << endl;
+        cout << "Largest win: " << biggestWin << endl;
+        cout << "Number of times went bust: " << brokeNum << endl;
+        cout << "Average Change in Money: " << averageChange / visits << endl;
+        cout << "Number of winning visits: " << winningTimes << endl;
+        cout << "Number of losing visits: " << losingTimes << endl;
+        cout << "Number of even visits: " << evenTimes << endl;
+        cout << "|-------------------------------------------|" << endl;
+        cout << "Thank you for visiting the roulette simulator :)" << endl;
+        cout << "Press any key + enter to exit" << endl;
+        cin >> menu;
+        return 0;
     }else if(menu == 2){
         randomStrat(slots,zeroes,visits,money, totalRisked, totalWinnings, biggestWin, brokeNum, averageChange, winningTimes, losingTimes, evenTimes);
         cout << "Finished with Random Strategy" << endl;
@@ -101,6 +121,26 @@ int main(){
         return 0;
     }else if(menu == 3){
         fixedStrat(slots,zeroes,visits,money, totalRisked, totalWinnings, biggestWin, brokeNum, averageChange, winningTimes, losingTimes, evenTimes);
+        cout << "Finished with Fixed Strategy" << endl;
+        cout << "Displaying Statistics:" << endl;
+        cout << "|-------------------------------------------|" << endl;
+        cout << "Slots Input at Start: " << slots << endl;
+        cout << "Zeroes Input at Start: " << zeroes << endl;
+        cout << "Visits Input at Start: " << visits << endl;
+        cout << "Betting Amount Input at Start: " << money << endl;
+        cout << "Total Amount Risked: " << totalRisked << endl;
+        cout << "Total Amount Won: " << totalWinnings << " , " << totalWinnings / totalRisked * 100 << "\% gain" << endl;
+        cout << "Largest win: " << biggestWin << endl;
+        cout << "Number of times went bust: " << brokeNum << endl;
+        cout << "Average Change in Money: " << averageChange / visits << endl;
+        cout << "Number of winning visits: " << winningTimes << endl;
+        cout << "Number of losing visits: " << losingTimes << endl;
+        cout << "Number of even visits: " << evenTimes << endl;
+        cout << "|-------------------------------------------|" << endl;
+        cout << "Thank you for visiting the roulette simulator :)" << endl;
+        cout << "Press any key + enter to exit" << endl;
+        cin >> menu;
+        return 0;
     }
     return 0;
 }
@@ -113,6 +153,7 @@ int martinGaleStrat(int slots, int zeroes, int visits, int money, int &totalRisk
     bool quit = true;
     int startingMoney = money;
     int increment = 0;
+    bool lost = false;
     do{
         //increment counter to keep track of the total number of visits to the casino
         increment++;
@@ -133,37 +174,52 @@ int martinGaleStrat(int slots, int zeroes, int visits, int money, int &totalRisk
             do {
                     cout << "\nNow betting with $" << (betAmt * 2)  << endl;
                     spin = rand() % slots + 0;
-                        if (spin % 2 == 0){
+                        if(zeroes == 1){
+                            if(spin == 0){
+                                cout << "Spin hits: GREEN " << spin << endl;
+                                lost = true;
+                            }
+                        }
+                        if(zeroes == 2){
+                            if(spin == 0 || spin == 100){
+                                cout << "Spin hits: GREEN " << spin << endl;
+                                lost = true;
+                            }
+                        }
+                        if (spin % 2 == 0 && lost != true){
                             //returns to the user the amount they betted + the winnings
                             cout << "\nYou won your bet and have earned $"<< (betAmt * 4) << endl;
                             startingMoney = startingMoney + (betAmt * 4);
                             cout << "\nYour new balance: $" << startingMoney << endl; 
                             cout << "|-----------------------------------------------------|" << endl;
-                            cout << "Would you like to continue? Press 1 to continue, and 2 to exit: ";
-                            while(!(cin >> cont) || cont < 1 || cont > 2){
-                                cout << "Please enter 1 or 2: ";
-                                cin.clear();
-                                cin.ignore(132, '\n');
-                            }
-                            //Allows the user to decide if they want to continue placing bets, or quitting after winning one time
-                            if(cont == 1){
-                                quit = false;
-                                cout << "Continuing..." << endl;
-                                betAmt = betAmt * 2;
-                            }
-                            else if(cont == 2){
-                                //boolean is assigned the value of 'true', ending the do-while loop and exiting the program 
-                                quit = true; 
-                                cout << "Exiting..." << endl;
-                                return 0;
+                            quit = true;
+                            // cout << "Would you like to continue? Press 1 to continue, and 2 to exit: ";
+                            // while(!(cin >> cont) || cont < 1 || cont > 2){
+                            //     cout << "Please enter 1 or 2: ";
+                            //     cin.clear();
+                            //     cin.ignore(132, '\n');
+                            // }
+                            // //Allows the user to decide if they want to continue placing bets, or quitting after winning one time
+                            // if(cont == 1){
+                            //     quit = false;
+                            //     cout << "Continuing..." << endl;
+                            //     betAmt = betAmt * 2;
+                            // }
+                            // else if(cont == 2){
+                            //     //boolean is assigned the value of 'true', ending the do-while loop and exiting the program 
+                            //     quit = true; 
+                            //     cout << "Exiting..." << endl;
+                            //     return 0;
+                            // }
+                            if(betAmt > biggestWin){
+                                biggestWin = betAmt;
                             }
                         }
-                        else{
+                        if(spin % 2 != 0 && lost != true){
                             betAmt = betAmt * 2;
                             if (betAmt > startingMoney){
                                 //exits the strategy when the bet amount is higher than the total amount of money the user has 
                                 cout << "You don't have enough money to bet again!" << endl;
-                                return 0;
                             }
                             else{
                                 cout << "You lost your bet. Doubling your betting amount and trying again." << endl;
@@ -175,7 +231,27 @@ int martinGaleStrat(int slots, int zeroes, int visits, int money, int &totalRisk
                         }
             }while (startingMoney > 0 && quit == false);
         }
+        //Updating overall statistics
+        if(startingMoney == 0){
+            brokeNum++;
+        }
+        //Check if you finished with more money than you started
+        if(startingMoney > money){
+            winningTimes++;
+            totalWinnings+= startingMoney-money;
+            averageChange += startingMoney - money;
+        }
+        //Check if you finished with less money than you started
+        if(startingMoney < money){
+            losingTimes++;
+            averageChange -= money - startingMoney;
+        }
+        //Check if you went even
+        if(startingMoney == money){
+            evenTimes++;
+        }
     }while(increment < visits);
+    totalRisked = money * visits;
     return 0;
 }
 
@@ -268,7 +344,7 @@ int randomStrat(int slots, int zeroes, int visits, int money, int &totalRisked, 
 int fixedStrat(int slots, int zeroes, int visits, int money, int &totalRisked, int &totalWinnings, int &biggestWin, int &brokeNum, int &averageChange, int &winningTimes, int &losingTimes, int &evenTimes){
     int dollarAmt;
     int betNum = 0;
-    int spin;
+    int spin = 0;
     int increment = 0;
     int startingMoney = money;
     int next;
@@ -296,6 +372,7 @@ int fixedStrat(int slots, int zeroes, int visits, int money, int &totalRisked, i
                     cout << "Spin hits: GREEN " << spin << endl;
                     startingMoney = startingMoney - dollarAmt;
                     cout << "\nRemaining account balance: $" << startingMoney << endl;
+                    spin = rand() % slots + 0;
                     betNum++;
                     lost = true;
                 }
@@ -314,6 +391,9 @@ int fixedStrat(int slots, int zeroes, int visits, int money, int &totalRisked, i
                 startingMoney = startingMoney + (dollarAmt * 2);
                 cout << "\nNew account balance: $" << startingMoney << endl;
                 betNum++;
+                if(dollarAmt > biggestWin){
+                    biggestWin = dollarAmt;
+                }
             }
             if(spin % 2 != 0 && lost != true){
                 cout << "\nYou lost your bet." << endl;
@@ -336,11 +416,31 @@ int fixedStrat(int slots, int zeroes, int visits, int money, int &totalRisked, i
                 cout << "\nYour final account balance: $" << startingMoney << endl;
                 quit = true;
             }
-        } while (betNum <= 50 && quit == false);
+            lost = false;
+        }while (betNum <= 50 && quit == false);
 
         if (betNum > 50) {
             cout << "\nYou have bet 50 times. You cannot place any more than 50 bets." << endl;
         }
+        if(startingMoney == 0){
+            brokeNum++;
+        }
+        //Check if you finished with more money than you started
+        if(startingMoney > money){
+            winningTimes++;
+            totalWinnings+= startingMoney-money;
+            averageChange += startingMoney - money;
+        }
+        //Check if you finished with less money than you started
+        if(startingMoney < money){
+            losingTimes++;
+            averageChange -= money - startingMoney;
+        }
+        //Check if you went even
+        if(startingMoney == money){
+            evenTimes++;
+        }
     }while(increment < visits);
+    totalRisked = money * visits;
 }
 
